@@ -1,0 +1,5 @@
+// config
+#define REAL_MAX_PLAYERS	(201)
+
+#undef MAX_PLAYERS
+#define MAX_PLAYERS REAL_MAX_PLAYERS
