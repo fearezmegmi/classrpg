@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Zeex
+// Copyright (C) 2018 Y_Less
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,24 @@
 #endif
 #define JIT_INC
 
+/**
+ * <library name="amx_assembly jit" summary="AMX Assembly Library: Detect the JIT plugin.">
+ *   <summary pawndoc="true">
+ *     This library uses the enhanced <em>pawndoc.xsl</em> from
+ *     <a href="https://github.com/pawn-lang/pawndoc">pawn-lang/pawndoc</a>.
+ *     This XSL has features such as library and markdown support, and will not
+ *     render this message when used.
+ *   </summary>
+ * </library>
+ */
+
+/// <p/>
+
+/// <library>amx_assembly jit</library>
 stock bool:IsJITPresent() {
 	#emit zero.pri
-	#emit lctrl 7
+	#emit lctrl __jit
 	#emit retn
-	return false; // make compiler happy
+	return false;
 }
+

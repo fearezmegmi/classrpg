@@ -1,7 +1,7 @@
 #include <a_samp>
 
-#include "jit"
+#include "..\jit"
 
 main() {
-	printf("JIT is %spresent", IsJitPresent() ? ("") : ("not "));
+	printf("JIT is %spresent", IsJITPresent() ? ("") : ("not "));
 }

@@ -1,14 +1,27 @@
-/**--------------------------------------------------------------------------**\
-					=================================
-					 y_svar - Automatic data saving.
-					=================================
-Description:
-	Declares data to be automatically saved and loaded for the whole server.
+#if defined _INC_y_svar
+	#endinput
+#endif
+
+/**
+ * <library
+ *   name="y_svar"
+ *   version="0.1"
+ *   license="(c) 2022 YSI contibutors, licensed under MPL 1.1"
+ *   summary="Declares data to be automatically saved and loaded for the whole server."
+ * >
+ *   <summary pawndoc="true">
+ *     This library uses the enhanced <em>pawndoc.xsl</em> from
+ *     <a href="https://github.com/pawn-lang/pawndoc">pawn-lang/pawndoc</a>.
+ *     This XSL has features such as library and markdown support, and will not
+ *     render this message when used.
+ *   </summary>
+ * </library>
+ *//** *//*
 Legal:
 	Version: MPL 1.1
 	
 	The contents of this file are subject to the Mozilla Public License Version 
-	1.1 (the "License"); you may not use this file except in compliance with 
+	1.1 the "License"; you may not use this file except in compliance with 
 	the License. You may obtain a copy of the License at 
 	http://www.mozilla.org/MPL/
 	
@@ -17,85 +30,81 @@ Legal:
 	for the specific language governing rights and limitations under the
 	License.
 	
-	The Original Code is the YSI utils include.
+	The Original Code is the YSI framework.
 	
 	The Initial Developer of the Original Code is Alex "Y_Less" Cole.
-	Portions created by the Initial Developer are Copyright (C) 2011
+	Portions created by the Initial Developer are Copyright (c) 2022
 	the Initial Developer. All Rights Reserved.
-	
-	Contributors:
-		ZeeX, koolk, JoeBullet/Google63, g_aSlice/Slice
-	
-	Thanks:
-		JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
-		ZeeX - Very productive conversations.
-		koolk - IsPlayerinAreaEx code.
-		TheAlpha - Danish translation.
-		breadfish - German translation.
-		Fireburn - Dutch translation.
-		yom - French translation.
-		50p - Polish translation.
-		Zamaroht - Spanish translation.
-		Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes
-			for me to strive to better.
-		Pixels^ - Running XScripters where the idea was born.
-		Matite - Pestering me to release it and using it.
-	
-	Very special thanks to:
-		Thiadmer - PAWN, whose limits continue to amaze me!
-		Kye/Kalcor - SA:MP.
-		SA:MP Team past, present and future - SA:MP.
-	
-Version:
-	0.1
-Changelog:
-	25/02/12:
-		First version.
-Functions:
-	Stock:
-		-
-	Inline:
-		-
-Variables:
-	Global:
-		-
-\**--------------------------------------------------------------------------**/
 
-#if defined _INC_y_svar
-	#endinput
-#endif
-#define _INC_y_svar
+Contributors:
+	Y_Less
+	koolk
+	JoeBullet/Google63
+	g_aSlice/Slice
+	Misiur
+	samphunter
+	tianmeta
+	maddinat0r
+	spacemud
+	Crayder
+	Dayvison
+	Ahmad45123
+	Zeex
+	irinel1996
+	Yiin-
+	Chaprnks
+	Konstantinos
+	Masterchen09
+	Southclaws
+	PatchwerkQWER
+	m0k1
+	paulommu
+	udan111
+	Cheaterman
 
-// y_uvars
+Thanks:
+	JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
+	ZeeX - Very productive conversations.
+	koolk - IsPlayerinAreaEx code.
+	TheAlpha - Danish translation.
+	breadfish - German translation.
+	Fireburn - Dutch translation.
+	yom - French translation.
+	50p - Polish translation.
+	Zamaroht - Spanish translation.
+	Los - Portuguese translation.
+	Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes for
+		me to strive to better.
+	Pixels^ - Running XScripters where the idea was born.
+	Matite - Pestering me to release it and using it.
 
-#if !defined MODE_NAME
-	#error Please define "MODE_NAME" before including y_svar.
+Very special thanks to:
+	Thiadmer - PAWN, whose limits continue to amaze me!
+	Kye/Kalcor - SA:MP.
+	SA:MP Team past, present and future - SA:MP.
+
+Optional plugins:
+	Gamer_Z - GPS.
+	Incognito - Streamer.
+	Me - sscanf2, fixes2, Whirlpool.
+*/
+
+#if !defined _INC_y_svar
+	#tryinclude "y_svar\y_svar_entry"
+#endif
+#if !defined _INC_y_svar
+	#tryinclude "YSI_Storage\y_svar\y_svar_entry"
+#endif
+#if !defined _INC_y_svar
+	#tryinclude "YSI\YSI_Storage\y_svar\y_svar_entry"
+#endif
+#if !defined _INC_y_svar
+	#tryinclude <YSI_Storage\y_svar\y_svar_entry>
+#endif
+#if !defined _INC_y_svar
+	#tryinclude <YSI\YSI_Storage\y_svar\y_svar_entry>
+#endif
+#if !defined _INC_y_svar
+	#error Could not find y_svar
 #endif
 
-#if defined SVAR_USE_MYSQL
-	#if _YSI_PLUGINS_MYSQL == 7
-		#include "y_svar/blueg7"
-	#elseif _YSI_PLUGINS_MYSQL == 6
-		#include "y_svar/blueg6"
-	#elseif _YSI_PLUGINS_MYSQL == 7
-		#include "y_svar/stricken"
-	#else
-		#error No MySQL plugin found.
-	#endif
-#elseif defined SVAR_USE_SQLITE
-	#include "y_svar/sqlite"
-#else
-	#include "..\YSI_Internal\y_version"
-	#include "..\YSI_Storage\y_amx"
-	#include "..\YSI_Core\y_debug"
-	#include "..\YSI_Core\y_utils"
-	#include "..\YSI_Storage\y_ini"
-	#include "..\YSI_Coding\y_hooks"
-	#include "..\YSI_Internal\y_stripnumbers"
-	
-	#include "y_svar/ini"
-#endif
-#if defined YSI_TESTS
-	#include "..\YSI_Core\y_testing"
-	#include "y_svar/tests"
-#endif

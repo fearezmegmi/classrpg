@@ -1,10 +1,10 @@
 #if defined __game_core_init
-	#error Már be van töltve az init.pwn
+	#error Mï¿½r be van tï¿½ltve az init.pwn
 #endif
 #define __game_core_init
 
 #if !defined __classrpg
-	#error Rossz fájlt próbálsz compileolni
+	#error Rossz fï¿½jlt prï¿½bï¿½lsz compileolni
 	#endinput
 #endif
 
@@ -19,9 +19,9 @@
  *                            *
  ******************************/
 // SAMP
-#include <a_samp>
+#include <..\samp\open.mp>
 #include <a_http>
-#include <global\redefinition_samp.pwn> // MAX_PLAYERS
+#include <..\global\redefinition_samp.pwn> // MAX_PLAYERS
 #include <global\samp.pwn>
 #include <global\samp_hidden.pwn>
 

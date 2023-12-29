@@ -18,16 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "import_table"
-#include "../amx_header"
-#include "../amx_memory"
-#include "../dynamic_call"
-#include "../phys_memory"
-#include "../shellcode"
+#if defined SHELL_EXECUTE_INC
+	#endinput
+#endif
+#define SHELL_EXECUTE_INC
 
-// http://msdn.microsoft.com/en-us/library/windows/desktop/bb762153%28v=vs.85%29.aspx
+/**
+ * <library name="amx_assembly Windows ShellExecute" summary="AMX Assembly Library: Execute arbitrary x86 assembly on Windows.">
+ *   <summary pawndoc="true">
+ *     This library uses the enhanced <em>pawndoc.xsl</em> from
+ *     <a href="https://github.com/pawn-lang/pawndoc">pawn-lang/pawndoc</a>.
+ *     This XSL has features such as library and markdown support, and will not
+ *     render this message when used.
+ *   </summary>
+ *   <remarks>http://msdn.microsoft.com/en-us/library/windows/desktop/bb762153%28v=vs.85%29.aspx</remarks>
+ * </library>
+ */
+
+/// <p/>
+
+#include "import_table"
+#include "..\amx_header"
+#include "..\amx_memory"
+#include "..\dynamic_call"
+#include "..\phys_memory"
+#include "..\shellcode"
 
 #define SW_HIDE (0)
+#define SW_NORMAL (1)
 #define SW_MAXIMIZE (3)
 #define SW_MINIMIZE (6)
 #define SW_RESTORE (9)
@@ -40,7 +58,24 @@
 #define SW_SHOWNOACTIVATE (4)
 #define SW_SHOWNORMAL (1)
 
-// NOTE: string arguments must be prepared with ToCharString() or similar function.
+// (0)                              // The operating system is out of memory or resources.
+#define ERROR_FILE_NOT_FOUND (2)    //  The specified file was not found.
+#define ERROR_PATH_NOT_FOUND (3)    // The specified path was not found.
+#define ERROR_BAD_FORMAT (11)       // The .exe file is invalid (non-Win32 .exe or error in .exe image).
+#define SE_ERR_ACCESSDENIED (5)     // The operating system denied access to the specified file.
+#define SE_ERR_ASSOCINCOMPLETE (27) // The file name association is incomplete or invalid.
+#define SE_ERR_DDEBUSY (30)         // The DDE transaction could not be completed because other DDE transactions were being processed.
+#define SE_ERR_DDEFAIL (29)         // The DDE transaction failed.
+#define SE_ERR_DDETIMEOUT (28)      // The DDE transaction could not be completed because the request timed out.
+#define SE_ERR_DLLNOTFOUND (32)     // The specified DLL was not found.
+#define SE_ERR_FNF (2)              // The specified file was not found.
+#define SE_ERR_NOASSOC (31)         // There is no application associated with the given file name extension. This error will also be returned if you attempt to print a file that is not printable.
+#define SE_ERR_OOM (8)              // There was not enough memory to complete the operation.
+#define SE_ERR_PNF (3)              // The specified path was not found.
+#define SE_ERR_SHARE (26)           // A sharing violation occurred.
+
+/// <library>amx_assembly Windows ShellExecute</library>
+/// <remarks>NOTE: string arguments must be prepared with ToCharString() or similar function.</remarks>
 stock ShellExecute(const Operation[], const File[], const Parameters[], ShowCmd) {
 	/*
 	.text:10001000 55                                push    ebp
@@ -68,30 +103,30 @@ stock ShellExecute(const Operation[], const File[], const Parameters[], ShowCmd)
 	.text:10001034 C3                                retn
 	*/
 
-	#define __(%0,%1,%2,%3) (((0x%3) << 24) | ((0x%2) << 16) | (0x%1 << 8) | (0x%0))
+	#define __asm(%0,%1,%2,%3) (((0x%3) << 24) | ((0x%2) << 16) | (0x%1 << 8) | (0x%0))
 
 	static const asm[] = {
-		__(90,90,90,90),
-		__(90,90,90,90),
-		__(90,90,90,90),
-		__(90,90,90,90),
-		__(55,8B,EC,8B),
-		__(45,0C,8B,48),
-		__(18,51,8B,55),
-		__(0C,8B,42,14),
-		__(50,8B,4D,0C),
-		__(8B,51,10,52),
-		__(8B,45,0C,8B),
-		__(48,0C,51,8B),
-		__(55,0C,8B,42),
-		__(08,50,8B,4D),
-		__(0C,8B,51,04),
-		__(52,FF,15,00),
-		__(00,00,00,5D),
-		__(C3,CC,CC,CC)
+		__asm(90,90,90,90),
+		__asm(90,90,90,90),
+		__asm(90,90,90,90),
+		__asm(90,90,90,90),
+		__asm(55,8B,EC,8B),
+		__asm(45,0C,8B,48),
+		__asm(18,51,8B,55),
+		__asm(0C,8B,42,14),
+		__asm(50,8B,4D,0C),
+		__asm(8B,51,10,52),
+		__asm(8B,45,0C,8B),
+		__asm(48,0C,51,8B),
+		__asm(55,0C,8B,42),
+		__asm(08,50,8B,4D),
+		__asm(0C,8B,51,04),
+		__asm(52,FF,15,00),
+		__asm(00,00,00,5D),
+		__asm(C3,CC,CC,CC)
 	};
 
-	#undef __
+//	#undef __
 
 	new address = GetImportAddress("ShellExecuteA");
 	WriteAmxMemory(ref(asm) + 63, refabs(address));
@@ -103,5 +138,8 @@ stock ShellExecute(const Operation[], const File[], const Parameters[], ShowCmd)
 	Push(0);                  // LPCTSTR lpDirectory
 	Push(ShowCmd);            // INT nShowCmd
 
-	return RunShellcode(refabs(asm));
+	new wide;
+	address = refwide(address, wide);
+	return RunShellcodeWide(address, wide);
 }
+

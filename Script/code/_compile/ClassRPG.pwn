@@ -11,4 +11,4 @@
 // -------------------------------------------
 
 #define __classrpg
-#include <game\init.pwn>
+#include <../../code/game/init.pwn>

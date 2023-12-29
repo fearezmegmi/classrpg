@@ -1,28 +1,47 @@
-/**--------------------------------------------------------------------------**\
-					==============================
-					Y Sever Includes - Debug Setup
-					==============================
-Description:
-	Ensures debug levels are set and defines debug functions.
-	
-	General debug levels:
-	
-	0 - No debug information.
-	1 - Callbacks and timers.
-	2 - Remote functions.
-	3 - Stock functions.
-	4 - Static functions.
-	5 - Code.
-	6 - Loops.
-	7 - Extra loop code.
-	
-	If you use P:0 you get an optional debug print controlled by the global
-	state ysi_debug - which is either on or off.
+#if defined _INC_y_debug
+	#endinput
+#endif
+#define _INC_y_debug
+
+/*+
+ * <library
+ *   name="y_debug"
+ *   version="1.0"
+ *   license="(c) 2022 YSI contibutors, licensed under MPL 1.1"
+ * >
+ *   <summary pawndoc="true">
+ *     This library uses the enhanced <em>pawndoc.xsl</em> from
+ *     <a href="https://github.com/pawn-lang/pawndoc">pawn-lang/pawndoc</a>.
+ *     This XSL has features such as library and markdown support, and will not
+ *     render this message when used.
+ *   </summary>
+ *   <remarks>
+ *     <p>Ensures debug levels are set and defines debug functions.</p>
+ *    
+ *     <p>General debug levels:</p>
+ *    
+ *     <ul>
+ *     <li>-1 - Run-time selected debug level.</li>
+ *     <li>0 - No debug information.</li>
+ *     <li>1 - Callbacks and timers.</li>
+ *     <li>2 - Remote functions.</li>
+ *     <li>3 - Stock functions.</li>
+ *     <li>4 - Static functions.</li>
+ *     <li>5 - Utility functions.</li>
+ *     <li>6 - Code.</li>
+ *     <li>7 - Loops.</li>
+ *     </ul>
+ *    
+ *     <p>If you use <c>Debug_Print0</c> you get an optional debug print controlled by the
+ *     global state <c>ysi_debug</c> - which is either on or off.</p>
+ *   </remarks>
+ * </library>
+ *//** *//*
 Legal:
 	Version: MPL 1.1
 	
 	The contents of this file are subject to the Mozilla Public License Version 
-	1.1 (the "License"); you may not use this file except in compliance with 
+	1.1 the "License"; you may not use this file except in compliance with 
 	the License. You may obtain a copy of the License at 
 	http://www.mozilla.org/MPL/
 	
@@ -31,332 +50,81 @@ Legal:
 	for the specific language governing rights and limitations under the
 	License.
 	
-	The Original Code is the YSI debug include.
+	The Original Code is the YSI framework.
 	
 	The Initial Developer of the Original Code is Alex "Y_Less" Cole.
-	Portions created by the Initial Developer are Copyright (C) 2011
+	Portions created by the Initial Developer are Copyright (c) 2022
 	the Initial Developer. All Rights Reserved.
-	
-	Contributors:
-		ZeeX, koolk, JoeBullet/Google63, g_aSlice/Slice
-	
-	Thanks:
-		JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
-		ZeeX - Very productive conversations.
-		koolk - IsPlayerinAreaEx code.
-		TheAlpha - Danish translation.
-		breadfish - German translation.
-		Fireburn - Dutch translation.
-		yom - French translation.
-		50p - Polish translation.
-		Zamaroht - Spanish translation.
-		Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes
-			for me to strive to better.
-		Pixels^ - Running XScripters where the idea was born.
-		Matite - Pestering me to release it and using it.
-	
-	Very special thanks to:
-		Thiadmer - PAWN, whose limits continue to amaze me!
-		Kye/Kalcor - SA:MP.
-		SA:MP Team past, present and future - SA:MP.
-	
-Version:
-	1.0
-Changelog:
-	06/08/10:
-		Added new syntax.
-		Added level 0 debugging with state controlled functions.
-	15/04/07:
-		First version.
-Functions:
-	Public:
-		-
-	Core:
-		-
-	Stock:
-		-
-	Static:
-		-
-	Inline:
-		Debug_Code - Runs defined code if a certain level is active.
-		Debug_Print - Prints the formatted string provided at the given level.
-	API:
-		-
-Callbacks:
-	-
-Definitions:
-	P:<0-6> - Print a message.
-	P:C - Run debug code.
-	P:E - Print an error message.
-	P:W - Print a warning message.
-Enums:
-	-
-Macros:
-	-
-Tags:
-	-
-Variables:
-	Global:
-		-
-	Static:
-		-
-Commands:
-	-
-Compile options:
-	_DEBUG - Debugging level to use.
-Operators:
-	-
-</remarks>
-\**--------------------------------------------------------------------------**/
 
-#if defined _INC_y_debug
-	#endinput
+Contributors:
+	Y_Less
+	koolk
+	JoeBullet/Google63
+	g_aSlice/Slice
+	Misiur
+	samphunter
+	tianmeta
+	maddinat0r
+	spacemud
+	Crayder
+	Dayvison
+	Ahmad45123
+	Zeex
+	irinel1996
+	Yiin-
+	Chaprnks
+	Konstantinos
+	Masterchen09
+	Southclaws
+	PatchwerkQWER
+	m0k1
+	paulommu
+	udan111
+	Cheaterman
+
+Thanks:
+	JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
+	ZeeX - Very productive conversations.
+	koolk - IsPlayerinAreaEx code.
+	TheAlpha - Danish translation.
+	breadfish - German translation.
+	Fireburn - Dutch translation.
+	yom - French translation.
+	50p - Polish translation.
+	Zamaroht - Spanish translation.
+	Los - Portuguese translation.
+	Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes for
+		me to strive to better.
+	Pixels^ - Running XScripters where the idea was born.
+	Matite - Pestering me to release it and using it.
+
+Very special thanks to:
+	Thiadmer - PAWN, whose limits continue to amaze me!
+	Kye/Kalcor - SA:MP.
+	SA:MP Team past, present and future - SA:MP.
+
+Optional plugins:
+	Gamer_Z - GPS.
+	Incognito - Streamer.
+	Me - sscanf2, fixes2, Whirlpool.
+*/
+
+#if !defined _INC_y_core
+	#tryinclude "y_core\y_core_entry"
 #endif
-#define _INC_y_debug
-
-#include "..\YSI_Internal\y_version"
-
-#include "..\YSI_Internal\y_funcinc"
-
-#include "..\YSI_Server\y_scriptinit"
-
-#if !defined _DEBUG
-	#define _DEBUG 0
+#if !defined _INC_y_core
+	#tryinclude "YSI_Core\y_core\y_core_entry"
 #endif
-
-#define P:%1(%2); Debug_Print%1(%2);
-#define C:%1(%2); Debug_Code%1(%2);
-
-/**--------------------------------------------------------------------------**\
-<summary>Debug_Code</summary>
-<param name="level">Debug level to run the code at.</param>
-<param name="code">Code to run.</param>
-<returns>
-	-
-</returns>
-<remarks>
-	Code is not a variable, it's a code chunk and may be written as so:
-	
-	Debug_Code1(if (bla == 2) { bla++; printf("%d", bla); });
-	
-	The code must all be on one line to avoid errors.
-	This isn't really a function as the first parameter is part of the name.
-</remarks>
-\**--------------------------------------------------------------------------**/
-
-#define DBGC1 Debug_Code1
-#define DBGC2 Debug_Code2
-#define DBGC3 Debug_Code3
-#define DBGC4 Debug_Code4
-#define DBGC5 Debug_Code5
-
-#if _DEBUG >= 1
-	#define Debug_Code1(%1); \
-		%1
-#else
-	#define Debug_Code1(%1);
+#if !defined _INC_y_core
+	#tryinclude "YSI\YSI_Core\y_core\y_core_entry"
 #endif
-
-#if _DEBUG >= 2
-	#define Debug_Code2(%1); \
-		%1
-#else
-	#define Debug_Code2(%1);
+#if !defined _INC_y_core
+	#tryinclude <YSI_Core\y_core\y_core_entry>
 #endif
-
-#if _DEBUG >= 3
-	#define Debug_Code3(%1); \
-		%1
-#else
-	#define Debug_Code3(%1);
+#if !defined _INC_y_core
+	#tryinclude <YSI\YSI_Core\y_core\y_core_entry>
 #endif
-
-#if _DEBUG >= 4
-	#define Debug_Code4(%1); \
-		%1
-#else
-	#define Debug_Code4(%1);
-#endif
-
-#if _DEBUG >= 5
-	#define Debug_Code5(%1); \
-		%1
-#else
-	#define Debug_Code5(%1);
-#endif
-
-#if _DEBUG >= 6
-	#define Debug_Code6(%1); \
-		%1
-#else
-	#define Debug_Code6(%1);
-#endif
-
-/**--------------------------------------------------------------------------**\
-<summary>Debug_Print</summary>
-<param name="level">Debug level to print at.</param>
-<param name="format[]">Format.</param>
-<param name="..."></param>
-<returns>
-	-
-</returns>
-<remarks>
-	This isn't really a function as the first parameter is part of the name:
-	
-	Debug_Print4("variables: %d, %d", i, j);
-</remarks>
-\**--------------------------------------------------------------------------**/
-
-#define DBGP1 Debug_Print1
-#define DBGP2 Debug_Print2
-#define DBGP3 Debug_Print3
-#define DBGP4 Debug_Print4
-#define DBGP5 Debug_Print5
-
-#if _DEBUG >= 1
-	#define Debug_Print1(%1); \
-		printf(%1);
-#else
-	#define Debug_Print1(%1);
-#endif
-
-#if _DEBUG >= 2
-	#define Debug_Print2(%1); \
-		printf(%1);
-#else
-	#define Debug_Print2(%1);
-#endif
-
-#if _DEBUG >= 3
-	#define Debug_Print3(%1); \
-		printf(%1);
-#else
-	#define Debug_Print3(%1);
-#endif
-
-#if _DEBUG >= 4
-	#define Debug_Print4(%1); \
-		printf(%1);
-#else
-	#define Debug_Print4(%1);
-#endif
-
-#if _DEBUG >= 5
-	#define Debug_Print5(%1); \
-		printf(%1);
-#else
-	#define Debug_Print5(%1);
-#endif
-
-#if _DEBUG >= 6
-	#define Debug_Print6(%1); \
-		printf(%1);
-#else
-	#define Debug_Print6(%1);
-#endif
-
-#if _DEBUG >= 7
-	#define Debug_Print7(%1); \
-		printf(%1);
-#else
-	#define Debug_Print7(%1);
-#endif
-
-#define Debug_PrintE(%1); \
-	Debug_Print0("\7\7\7*** YSI Error: " #%1);
-
-#define Debug_PrintW(%1); \
-	Debug_Print0("\7*** YSI Warning: " #%1);
-
-#define Debug_PrintI(%1); \
-	Debug_Print0("*** YSI Info: " #%1);
-
-#define Debug_PrintF(%1); \
-	Debug_Print0("\7\7\7\7\7*** YSI Fatal Error: " #%1);
-
-#define Debug_PrintC(%1); \
-	Debug_Code1(%1);
-
-stock Debug_Print0(const str[], {Float,_}:...) <ysi_debug : on>
-{
-	#emit STACK        8
-	#emit SYSREQ.C     printf
-	#emit STACK        0xFFFFFFF8
-	#pragma unused str
-	return 0;
-}
-
-stock Debug_Print0(const str[], {Float,_}:...) <>
-{
-	#pragma unused str
-	return 0;
-}
-
-stock Debug_PrintArray(arr[], size)
-{
-	new
-		str[96];
-	switch (size)
-	{
-		case 0:
-			str = "<>";
-		case 1:
-			format(str, sizeof (str), "<%d>", arr[0]);
-		case 2:
-			format(str, sizeof (str), "<%d, %d>", arr[0], arr[1]);
-		case 3:
-			format(str, sizeof (str), "<%d, %d, %d>", arr[0], arr[1], arr[2]);
-		case 4:
-			format(str, sizeof (str), "<%d, %d, %d, %d>", arr[0], arr[1], arr[2], arr[3]);
-		case 5:
-			format(str, sizeof (str), "<%d, %d, %d, %d, %d>", arr[0], arr[1], arr[2], arr[3], arr[4]);
-		default:
-			format(str, sizeof (str), "<%d, %d, %d, %d, %d, ... (+ %d)>", arr[0], arr[1], arr[2], arr[3], arr[4], size - 5);
-	}
-	return str;
-}
-
-/*#if _DEBUG > 0
-	#define Debug_Print0(%1); \
-		printf(%1);
-#endif*/
-
-public OnScriptInit()
-{
-	Debug_SetState();
-	new
-		s;
-	// Test the ADDRESS of the variable, not the value.
-	#emit CONST.pri YSI_FILTERSCRIPT
-	#emit STOR.S.pri s
-	if (s)
-	{
-		//goto Debug_OnScriptInit_no_fault();
-		#if defined Debug_OnScriptInit
-			return Debug_OnScriptInit();
-		#else
-			return 1;
-		#endif
-	}
-	P:F("YSI_FILTERSCRIPT == 0");
-	while (s != 10000000) ++s;
-	#emit CONST.pri 0
-	#emit SCTRL     6
-	return 1;
-}
-
-static stock Debug_SetState() <ysi_debug : off>
-{
-}
-
-static stock Debug_SetState() <>
-{
-	state ysi_debug : on;
-}
-
-#undef OnScriptInit
-#define OnScriptInit Debug_OnScriptInit
-#if defined Debug_OnScriptInit
-	forward Debug_OnScriptInit();
+#if !defined _INC_y_core
+	#error Could not find y_debug
 #endif
 

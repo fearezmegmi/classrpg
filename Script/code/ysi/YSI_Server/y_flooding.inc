@@ -1,14 +1,27 @@
-/**--------------------------------------------------------------------------**\
-					===================================
-					Y Sever Includes - Connections Core
-					===================================
-Description:
-	Allows a limited number of connections from a single IP.
+#if defined _INC_y_flooding
+	#endinput
+#endif
+
+/**
+ * <library
+ *   name="y_flooding"
+ *   version="1.0"
+ *   license="(c) 2022 YSI contibutors, licensed under MPL 1.1"
+ *   summary="Allows a limited number of connections from a single IP."
+ * >
+ *   <summary pawndoc="true">
+ *     This library uses the enhanced <em>pawndoc.xsl</em> from
+ *     <a href="https://github.com/pawn-lang/pawndoc">pawn-lang/pawndoc</a>.
+ *     This XSL has features such as library and markdown support, and will not
+ *     render this message when used.
+ *   </summary>
+ * </library>
+ *//** *//*
 Legal:
 	Version: MPL 1.1
 	
 	The contents of this file are subject to the Mozilla Public License Version 
-	1.1 (the "License"); you may not use this file except in compliance with 
+	1.1 the "License"; you may not use this file except in compliance with 
 	the License. You may obtain a copy of the License at 
 	http://www.mozilla.org/MPL/
 	
@@ -17,209 +30,81 @@ Legal:
 	for the specific language governing rights and limitations under the
 	License.
 	
-	The Original Code is the YSI flooding include.
+	The Original Code is the YSI framework.
 	
 	The Initial Developer of the Original Code is Alex "Y_Less" Cole.
-	Portions created by the Initial Developer are Copyright (C) 2011
+	Portions created by the Initial Developer are Copyright (c) 2022
 	the Initial Developer. All Rights Reserved.
-	
-	Contributors:
-		ZeeX, koolk, JoeBullet/Google63, g_aSlice/Slice
-	
-	Thanks:
-		JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
-		ZeeX - Very productive conversations.
-		koolk - IsPlayerinAreaEx code.
-		TheAlpha - Danish translation.
-		breadfish - German translation.
-		Fireburn - Dutch translation.
-		yom - French translation.
-		50p - Polish translation.
-		Zamaroht - Spanish translation.
-		Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes
-			for me to strive to better.
-		Pixels^ - Running XScripters where the idea was born.
-		Matite - Pestering me to release it and using it.
-	
-	Very special thanks to:
-		Thiadmer - PAWN, whose limits continue to amaze me!
-		Kye/Kalcor - SA:MP.
-		SA:MP Team past, present and future - SA:MP.
-	
-Changelog:
-	15/11/10:
-		Updated to YSI 1.0.
-	11/03/08:
-		First version.
-Functions:
-	Public:
-		-
-	Core:
-		OnPlayerConnect - Called to check IPs.
-		OnScriptInit - Sets the OnPlayerConnect function flag.
-	Stock:
-		-
-	Static:
-		-
-	Inline:
-		-
-	API:
-		SetMaxConnections - Sets the max allowed connections from an IP.
-Callbacks:
-	-
-Definitions:
-	-
-Enums:
-	e_FLOOD_ACTION - What to do if too many connections form.
-Macros:
-	-
-Tags:
-	-
-Variables:
-	Global:
-		-
-	Static:
-		YSI_g_sPlayerIPs - People's stored IPs for speed.
-		YSI_g_sMaxConnections - Data for the script.
-Commands:
-	-
-Compile options:
-	-
-Operators:
-	-
-</remarks>
-\**--------------------------------------------------------------------------**/
 
-#if defined _INC_y_flooding
-	#endinput
+Contributors:
+	Y_Less
+	koolk
+	JoeBullet/Google63
+	g_aSlice/Slice
+	Misiur
+	samphunter
+	tianmeta
+	maddinat0r
+	spacemud
+	Crayder
+	Dayvison
+	Ahmad45123
+	Zeex
+	irinel1996
+	Yiin-
+	Chaprnks
+	Konstantinos
+	Masterchen09
+	Southclaws
+	PatchwerkQWER
+	m0k1
+	paulommu
+	udan111
+	Cheaterman
+
+Thanks:
+	JoeBullet/Google63 - Handy arbitrary ASM jump code using SCTRL.
+	ZeeX - Very productive conversations.
+	koolk - IsPlayerinAreaEx code.
+	TheAlpha - Danish translation.
+	breadfish - German translation.
+	Fireburn - Dutch translation.
+	yom - French translation.
+	50p - Polish translation.
+	Zamaroht - Spanish translation.
+	Los - Portuguese translation.
+	Dracoblue, sintax, mabako, Xtreme, other coders - Producing other modes for
+		me to strive to better.
+	Pixels^ - Running XScripters where the idea was born.
+	Matite - Pestering me to release it and using it.
+
+Very special thanks to:
+	Thiadmer - PAWN, whose limits continue to amaze me!
+	Kye/Kalcor - SA:MP.
+	SA:MP Team past, present and future - SA:MP.
+
+Optional plugins:
+	Gamer_Z - GPS.
+	Incognito - Streamer.
+	Me - sscanf2, fixes2, Whirlpool.
+*/
+
+#if !defined _INC_y_flooding
+	#tryinclude "y_flooding\y_flooding_entry"
 #endif
-#define _INC_y_flooding
+#if !defined _INC_y_flooding
+	#tryinclude "YSI_Server\y_flooding\y_flooding_entry"
+#endif
+#if !defined _INC_y_flooding
+	#tryinclude "YSI\YSI_Server\y_flooding\y_flooding_entry"
+#endif
+#if !defined _INC_y_flooding
+	#tryinclude <YSI_Server\y_flooding\y_flooding_entry>
+#endif
+#if !defined _INC_y_flooding
+	#tryinclude <YSI\YSI_Server\y_flooding\y_flooding_entry>
+#endif
+#if !defined _INC_y_flooding
+	#error Could not find y_flooding
+#endif
 
-#include "..\YSI_Internal\y_version"
-#include "..\YSI_Data\y_iterate"
-#include "..\YSI_Core\y_debug"
-#include "..\YSI_Coding\y_hooks"
-
-enum e_FLOOD_ACTION (+= 0x00010000)
-{
-	e_FLOOD_ACTION_COUNT = 0x0000FFFF,
-	e_FLOOD_ACTION_ACTION = 0x000F0000,
-	e_FLOOD_ACTION_NOTHING = 0,
-	e_FLOOD_ACTION_BLOCK,
-	e_FLOOD_ACTION_KICK,
-	e_FLOOD_ACTION_BAN,
-	e_FLOOD_ACTION_FBAN
-}
-
-static
-	YSI_g_sPlayerIPs[MAX_PLAYERS],
-	e_FLOOD_ACTION:YSI_g_sMaxConnections = e_FLOOD_ACTION_COUNT | e_FLOOD_ACTION_BLOCK;
-
-/**--------------------------------------------------------------------------**\
-<summary>SetMaxConnections</summary>
-<param name="max">Maximum number of connections allowed from the same IP.</param>
-<param name="e_FLOOD_ACTION:action">What to do if there's too many.</param>
-<returns>
-	-
-</returns>
-<remarks>
-	Sets the maximum connections allowed from a single IP.
-	
-	Options:
-	
-	e_FLOOD_ACTION_BLOCK - Kick the latest player on this IP.
-	e_FLOOD_ACTION_KICK - Kick all players on this IP.
-	e_FLOOD_ACTION_BAN - Ban the IP and have players time out.
-	e_FLOOD_ACTION_FBAN - Ban the IP and kick all the players instantly.
-</remarks>
-\**--------------------------------------------------------------------------**/
-
-stock SetMaxConnections(max = -1, e_FLOOD_ACTION:action = e_FLOOD_ACTION_BLOCK)
-{
-	P:3("SetMaxConnections called: %i, %i", max, _:action);
-	YSI_g_sMaxConnections = (e_FLOOD_ACTION:max & e_FLOOD_ACTION_COUNT) | action;
-}
-
-/**--------------------------------------------------------------------------**\
-<summary>Conn_OnPlayerConnect</summary>
-<param name="playerid">Player who joined.</param>
-<returns>
-	-
-</returns>
-<remarks>
-	Checks for too many connections from the same IP address and acts
-	accordingly.
-	
-	Could be edited to only loop through players once but I'm not sure the
-	extra code required would be faster anyway, definately not easier.
-</remarks>
-\**--------------------------------------------------------------------------**/
-
-hook OnPlayerConnect(playerid)
-{
-	if ((YSI_g_sMaxConnections & e_FLOOD_ACTION_COUNT) != e_FLOOD_ACTION_COUNT)
-	{
-		new
-			count = 0,
-			IP = GetIP(playerid);
-		YSI_g_sPlayerIPs[playerid] = IP;
-		foreach (new i : Player)
-		{
-			if (YSI_g_sPlayerIPs[i] == IP)
-			{
-				++count;
-			}
-		}
-		if (count > _:(YSI_g_sMaxConnections & e_FLOOD_ACTION_COUNT))
-		{
-			P:I("Max Connections exceeded");
-			switch (YSI_g_sMaxConnections & e_FLOOD_ACTION_ACTION)
-			{
-				case e_FLOOD_ACTION_BLOCK:
-				{
-					// Kick the latest player.
-					Kick(playerid);
-					return 0;
-				}
-				case e_FLOOD_ACTION_KICK:
-				{
-					// Kick all the players.
-					foreach (new i : Player)
-					{
-						if (YSI_g_sPlayerIPs[i] == IP)
-						{
-							Kick(i);
-						}
-					}
-					return 0;
-				}
-				case e_FLOOD_ACTION_BAN:
-				{
-					// Ban the IP.
-					BanEx(playerid, "YSI max connections auto-ban");
-				}
-				case e_FLOOD_ACTION_FBAN:
-				{
-					// Ban the IP.
-					BanEx(playerid, "YSI max connections auto-ban");
-					// Kick all the players.
-					foreach (new i : Player)
-					{
-						if (YSI_g_sPlayerIPs[i] == IP)
-						{
-							Kick(i);
-						}
-					}
-					return 0;
-				}
-				default:
-				{
-					// Do nothing.
-					return 1;
-				}
-			}
-		}
-		return 0;
-	}
-	return 1;
-}
